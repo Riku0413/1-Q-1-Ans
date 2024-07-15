@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
-import getRandomPrefecturalCapitals from "../components/Random";
-import { PrefecturalCapital } from "../components/Random";
+import getRandomPrefecturalCitys from "../utils/Random";
+import { PrefecturalCity } from "../utils/Random";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,7 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useLocation } from "react-router-dom";
 
-type PrefecturalCapitalAnswer = PrefecturalCapital & {
+type PrefecturalCityAnswer = PrefecturalCity & {
   answer: string;
 };
 
@@ -27,20 +27,20 @@ const mapping: { [key: string]: string } = {
   kyushu: "九州",
 };
 
-function Home() {
+function Quiz() {
   const [count, setCount] = useState(1);
   const [value, setValue] = useState("");
   const [questionAndAnswer, setQuestionAndAnswer] = useState<
-    PrefecturalCapitalAnswer[]
+    PrefecturalCityAnswer[]
   >([]);
-  const [currentSet, setCurrentSet] = useState<PrefecturalCapital[]>([]);
+  const [currentSet, setCurrentSet] = useState<PrefecturalCity[]>([]);
   const [message, setMessage] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const areas = queryParams.get("area");
   const area = mapping[areas ?? "all"];
-  const total = 10;
+  const total = 3;
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -48,9 +48,9 @@ function Home() {
       if (isDisabled) return;
       setIsDisabled(true);
       if (value === currentSet[count - 1]["prefecture"]) {
-        setMessage("正解！");
+        setMessage("正解⭕️");
       } else {
-        setMessage(`不正解、正解は ${currentSet[count - 1]["prefecture"]}`);
+        setMessage(`❌ 正解は ${currentSet[count - 1]["prefecture"]}`);
       }
 
       setTimeout(() => {
@@ -60,8 +60,8 @@ function Home() {
         setIsDisabled(false);
       }, 1000);
 
-      const newQuestionAndAnswer: PrefecturalCapitalAnswer = {
-        capital: currentSet[count - 1].capital,
+      const newQuestionAndAnswer: PrefecturalCityAnswer = {
+        city: currentSet[count - 1].city,
         prefecture: currentSet[count - 1].prefecture,
         answer: value,
       };
@@ -78,11 +78,11 @@ function Home() {
   useEffect(() => {
     async function main() {
       try {
-        const prefecturalCapitals = await getRandomPrefecturalCapitals(total, area);
-        console.log(prefecturalCapitals);
-        setCurrentSet(prefecturalCapitals);
+        const prefecturalCitys = await getRandomPrefecturalCitys(total, area);
+        console.log(prefecturalCitys);
+        setCurrentSet(prefecturalCitys);
       } catch (error) {
-        console.error("Error fetching or processing capitals:", error);
+        console.error("Error fetching or processing citys:", error);
       }
     }
     main();
@@ -92,46 +92,49 @@ function Home() {
     <Box
       component="form"
       sx={{
-        "& > :not(style)": { m: 1, width: "80%" },
+        "& > :not(style)": { width: "100%" },
       }}
       noValidate
       autoComplete="off"
     >
       {count <= total ? (
         <>
-          {" "}
+          {count}
           <Box
             sx={{
               display: "flex",
-              flexWrap: "wrap",
-              "& > :not(style)": {
-                m: 1,
-                width: 256,
-                height: 64,
-              },
+              justifyContent: "center",
             }}
           >
-            {count}
             <Paper
               sx={{
                 textAlign: "center",
                 lineHeight: "64px",
-                width: "100%",
+                width: "90%",
+                maxWidth: "300px",
               }}
             >
-              {currentSet[count - 1]?.capital}
+              {message ? <Box>{message}</Box> : currentSet[count - 1]?.city}
             </Paper>
-            {message && <Box>{message}</Box>}
           </Box>
-          <TextField
-            id="outlined-basic"
-            label="Enter Here"
-            variant="outlined"
-            value={value}
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-            disabled={isDisabled}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: "20px"
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              label="Enter Here"
+              variant="outlined"
+              value={value}
+              onChange={handleChange}
+              onKeyPress={handleKeyPress}
+              disabled={isDisabled}
+              sx={{ width: "90%", maxWidth: "300px" }}
+            />
+          </Box>
         </>
       ) : (
         <Box sx={{ width: "100%" }}>
@@ -148,7 +151,7 @@ function Home() {
           </h2>
           <TableContainer
             component={Paper}
-            sx={{ width: "80%", maxWidth: "500px" }}
+            sx={{ width: "90%", maxWidth: "500px" }}
           >
             <Table size="small" aria-label="a dense table">
               <TableHead>
@@ -170,7 +173,7 @@ function Home() {
                       {index + 1}
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {row.capital}
+                      {row.city}
                     </TableCell>
                     <TableCell>{row.prefecture}</TableCell>
                     <TableCell>{row.answer}</TableCell>
@@ -182,7 +185,7 @@ function Home() {
               </TableBody>
             </Table>
           </TableContainer>
-          <a href={`/home?area=${area}`}>Play Again</a>
+          <a href={`/quiz?area=${area}`}>Play Again</a>
           <br />
           <a href={`/`}>Back to Home</a>
         </Box>
@@ -191,4 +194,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Quiz;

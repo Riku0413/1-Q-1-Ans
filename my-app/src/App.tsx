@@ -1,29 +1,8 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
-import Home from "./routes/Home";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/router";
 
 function App() {
-  const navigate = useNavigate();
-
-  const handleNavigate = () => {
-    navigate('/about', { state: { message: 'Hello from Parent!' } });
-  };
-
-  return (
-    <Router>
-      <div className="App">
-        <button onClick={handleNavigate}>Go to Child</button>
-        <Routes>
-          <Route path="/home" element={<Home />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

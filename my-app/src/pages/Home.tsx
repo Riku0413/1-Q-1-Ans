@@ -5,8 +5,9 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Box from "@mui/material/Box";
 
-export default function Root() {
+export default function Home() {
   const navigate = useNavigate();
   const [area, setArea] = useState("all");
 
@@ -15,34 +16,38 @@ export default function Root() {
   };
 
   const onClick = () => {
-    navigate(`/home?area=${area}`);
+    navigate(`/quiz?area=${area}`);
   };
 
   return (
     <div id="sidebar">
       <h1>1問1答</h1>
-      <FormControl sx={{ width: "200px" }}>
-        <InputLabel id="demo-simple-select-label">地域</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={area}
-          label="地域"
-          onChange={handleChange}
-        >
-          <MenuItem value={"all"}>全地域</MenuItem>
-          <MenuItem value={"tohoku"}>東北</MenuItem>
-          <MenuItem value={"kanto"}>関東</MenuItem>
-          <MenuItem value={"chubu"}>中部</MenuItem>
-          <MenuItem value={"kinki"}>近畿</MenuItem>
-          <MenuItem value={"chugoku"}>中国</MenuItem>
-          <MenuItem value={"shikoku"}>四国</MenuItem>
-          <MenuItem value={"kyushu"}>九州</MenuItem>
-        </Select>
-      </FormControl>
-      <Button variant="contained" onClick={onClick}>
-        Start
-      </Button>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <FormControl sx={{ width: "200px" }}>
+          <InputLabel id="demo-simple-select-label">地域</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={area}
+            label="地域"
+            onChange={handleChange}
+          >
+            <MenuItem value={"all"}>全地域</MenuItem>
+            <MenuItem value={"tohoku"}>東北</MenuItem>
+            <MenuItem value={"kanto"}>関東</MenuItem>
+            <MenuItem value={"chubu"}>中部</MenuItem>
+            <MenuItem value={"kinki"}>近畿</MenuItem>
+            <MenuItem value={"chugoku"}>中国</MenuItem>
+            <MenuItem value={"shikoku"}>四国</MenuItem>
+            <MenuItem value={"kyushu"}>九州</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Box sx={{ mt: "20px", display: "flex", justifyContent: "center" }}>
+        <Button variant="contained" onClick={onClick}>
+          Start
+        </Button>
+      </Box>
     </div>
   );
 }
